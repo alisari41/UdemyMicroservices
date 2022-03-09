@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Services.Catalog.Settings
 {
-    public interface IDatabaseSettings
+    internal interface IDatabaseSettings
     {//appsettings içersindeki verilerimi nesneye dönüştürüyorum
         public string CourseCollectionName { get; set; }
         public string CategoryCollectionName { get; set; }

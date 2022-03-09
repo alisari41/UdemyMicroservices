@@ -5,9 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace FreeCourse.Shared.Dtos
 {
-    public class ResponseDto<T> //Herhangi bir where ile kısıtlama yapmıyorum gelen herşey olabilir
+    public class Response<T> //Herhangi bir where ile kısıtlama yapmıyorum gelen herşey olabilir
     {//Servislerimin kullanacağı ortak alan
-        public T Data { get; private set; }
+        public T Data { get; private set; }// buraya Dto nesnerlini göndercem
 
 
         [JsonIgnore] // Ben yanlız kendi içinde kullanmak istiyorum. Yani bir daha Kodu göndermeme gerek yok (postman de sağ alttaki kod)
@@ -19,9 +19,9 @@ namespace FreeCourse.Shared.Dtos
         public List<string> Errors { get; set; }
 
         // Static Factory Method
-        public static ResponseDto<T> Success(T data, int statusCode)
+        public static Response<T> Success(T data, int statusCode)
         {//Başarılı olup data alan
-            return new ResponseDto<T>
+            return new Response<T>
             {
                 Data = data,
                 StatusCode = statusCode,
@@ -29,9 +29,9 @@ namespace FreeCourse.Shared.Dtos
             };
         }
 
-        public static ResponseDto<T> Success(int statusCode)
+        public static Response<T> Success(int statusCode)
         {
-            return new ResponseDto<T>
+            return new Response<T>
             {
                 Data = default(T),
                 StatusCode = statusCode,
@@ -39,9 +39,9 @@ namespace FreeCourse.Shared.Dtos
             };
         }
 
-        public static ResponseDto<T> Fail(List<string> errors, int statusCode)
+        public static Response<T> Fail(List<string> errors, int statusCode)
         {//Birden fazla hata
-            return new ResponseDto<T>
+            return new Response<T>
             {
                 Errors = errors,
                 StatusCode = statusCode,
@@ -49,9 +49,9 @@ namespace FreeCourse.Shared.Dtos
             };
         }
 
-        public static ResponseDto<T> Fail(string error, int statusCode)
+        public static Response<T> Fail(string error, int statusCode)
         {
-            return new ResponseDto<T>
+            return new Response<T>
             {
                 Errors = new List<string>() { error },
                 StatusCode = statusCode,
