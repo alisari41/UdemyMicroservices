@@ -20,7 +20,7 @@ namespace FreeCourse.Services.Catalog.Services
 
         //Bunları doldurmak için IDatabaseSettings kullanıyorum
         public CategoryService(IMapper mapper, IDatabaseSettings databaseSettings)
-        {
+        {//Erişebilirle hata verirse class 'ı internal tanımla
             //veri tabanına Server'a bağlanmam lazım 
             var client = new MongoClient(databaseSettings.ConnectionString);
 
@@ -28,11 +28,12 @@ namespace FreeCourse.Services.Catalog.Services
             var database = client.GetDatabase(databaseSettings.DatabaseName);
 
 
-            // _categoryCollection işlemini artık doldurabiliriz
+            // _categoryCollection işlemini artık doldurabiliriz Category CategoryCollectionName leri diğer sınıflarda düzelt
             _categoryCollection = database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
             _mapper = mapper;
         }
 
+        
         // Listeleme
         public async Task<Response<List<CategoryDto>>> GetAllAsync()
         {
@@ -41,6 +42,7 @@ namespace FreeCourse.Services.Catalog.Services
             return Response<List<CategoryDto>>.Success(_mapper.Map<List<CategoryDto>>(categories), 200);
         }
 
+      
         // Ekleme 
         public async Task<Response<CategoryDto>> CreateAsync(Category category)
         {//CreateCategoryDto oluşturursam buraya parametre olarak verebilirim.

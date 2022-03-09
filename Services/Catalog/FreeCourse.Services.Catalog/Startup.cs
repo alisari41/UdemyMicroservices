@@ -27,8 +27,10 @@ namespace FreeCourse.Services.Catalog
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //Oluþturduðum service karþýlaþtýðýnda ne yapacaðýný belirtiyorum
+            //Oluþturduðum serviceleri karþýlaþtýðýnda ne yapacaðýný belirtiyorum
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICourseService, CourseService>();
+
 
 
 
