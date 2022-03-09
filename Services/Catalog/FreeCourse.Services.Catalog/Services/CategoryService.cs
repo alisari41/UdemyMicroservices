@@ -44,8 +44,10 @@ namespace FreeCourse.Services.Catalog.Services
 
       
         // Ekleme 
-        public async Task<Response<CategoryDto>> CreateAsync(Category category)
+        public async Task<Response<CategoryDto>> CreateAsync(CategoryDto categoryDto)
         {//CreateCategoryDto oluşturursam buraya parametre olarak verebilirim.
+
+            var category = _mapper.Map<Category>(categoryDto);// CategoryDto nesnesini Category'e dönüştürme işlemi
             await _categoryCollection.InsertOneAsync(category);
 
             //                                   Create işleminde dataları yollamamız lazım
