@@ -49,6 +49,10 @@ namespace FreeCourse.IdentityServer
                 options.EmitStaticAudienceClaim = true;
             })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
+
+                //Config.cs de yeni eklediğim ApiResourceları ekliyoruz 
+                .AddInMemoryApiResources(Config.ApiResources)
+
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>();
