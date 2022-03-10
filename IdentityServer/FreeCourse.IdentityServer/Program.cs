@@ -11,6 +11,10 @@ using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Linq;
+using FreeCourse.IdentityServer.Data;
+using FreeCourse.IdentityServer.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreeCourse.IdentityServer
 {
@@ -37,23 +41,34 @@ namespace FreeCourse.IdentityServer
 
             try
             {
-                var seed = args.Contains("/seed");
-                if (seed)
-                {
-                    args = args.Except(new[] { "/seed" }).ToArray();
-                }
-
                 var host = CreateHostBuilder(args).Build();
 
-                if (seed)
-                {
-                    Log.Information("Seeding database...");
-                    var config = host.Services.GetRequiredService<IConfiguration>();
-                    var connectionString = config.GetConnectionString("DefaultConnection");
-                    SeedData.EnsureSeedData(connectionString);
-                    Log.Information("Done seeding database.");
-                    return 0;
+                //Migration larımın otomatik yapılmasını istiyorum. Yani ben uygulamayı ayağa kaldırdığım zaman vertabanı yoksa oluşsun migrationların hepsi gerçekleşsin uygulama öyle ayağa kalksın
+                using (var scope = host.Services.CreateScope())
+                {//using ifadesini kullanıyorumki işlemim bittikten sonra memoryden düşsün
+                    var serviceProvider = scope.ServiceProvider;//ServiceProvider üzerinde startup.csdeki nesneye ulaşcam
+
+                    var applicationDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    applicationDbContext.Database.Migrate();
+
+                    //veritabanımda kullanıcı yoksa kullanıcı oluştursun
+                    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                    if (!userManager.Users.Any())
+                    {
+                        userManager.CreateAsync(new ApplicationUser
+                        {
+                            UserName = "alisari41",
+                            Email = "alisari41@outlook.com",
+                            City = "Kocaeli"
+                        }, "Password12*").Wait();//identity server default olarak bir büyük harf 1 sayı 1tane karakter bekler
+                    }
+
+
+
                 }
+
 
                 Log.Information("Starting host...");
                 host.Run();
