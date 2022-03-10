@@ -11,7 +11,7 @@ using MongoDB.Driver;
 
 namespace FreeCourse.Services.Catalog.Services
 {
-    internal class CategoryService : ICategoryService
+    public class CategoryService : ICategoryService
     {//Veritanındaki verileri okuyup Dtolara atama işlemi
         private readonly IMongoCollection<Category> _categoryCollection;
 

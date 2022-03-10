@@ -13,7 +13,7 @@ namespace FreeCourse.Services.Catalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    internal class CategoriesController : CustomBaseController
+    public class CategoriesController : CustomBaseController
     {//CustomBaseController den kalıtımm aldım 
         private readonly ICategoryService _categoryService;
 
@@ -22,7 +22,7 @@ namespace FreeCourse.Services.Catalog.Controllers
             _categoryService = categoryService;
         }
 
-
+        [HttpGet]//swager hata verir default olsa bile HttpGet belirt
         public async Task<IActionResult> GetAll()
         {
             var categories = await _categoryService.GetAllAsync();

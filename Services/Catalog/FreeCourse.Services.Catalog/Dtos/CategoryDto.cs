@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Services.Catalog.Dtos
 {
-    internal class CategoryDto
+    public class CategoryDto
     {// Category classı içersindeki nesneler
         public string Id { get; set; }
         public string Name { get; set; }

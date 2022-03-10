@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FreeCourse.Services.Catalog.Dtos
 {
-    internal class CourseDto
+    public class CourseDto
     {//Clietlardan herhangi bir property gizlememe gerek bu şekilde kalabilir.
         public string Id { get; set; }
         public string Name { get; set; }
