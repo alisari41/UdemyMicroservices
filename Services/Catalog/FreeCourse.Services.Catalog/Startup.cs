@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using FreeCourse.Services.Catalog.Services;
 using FreeCourse.Services.Catalog.Settings;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace FreeCourse.Services.Catalog
 {
@@ -27,17 +29,31 @@ namespace FreeCourse.Services.Catalog
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //CatalogApi 'ý koruma altýna alýyorum
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                //bu microservice e tokenýn kimin daðýttýðýný haber vericem
+                options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
+                options.Audience = "resource_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
+                options.RequireHttpsMetadata = false;
+            });
+
+
             //Oluþturduðum serviceleri karþýlaþtýðýnda ne yapacaðýný belirtiyorum
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICourseService, CourseService>();
 
+            
 
-
-
-            //AutoMapper ekleme
+            //AutoMapper ekleme 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers();
+            // bütün Controllerlara koruma/izin þartý ver
+            services.AddControllers(opt =>
+            {
+                opt.Filters.Add(new AuthorizeFilter());//Artýk bütün Controllerlara izinlerý authorize larý verdim
+            });
 
 
             // DatabaseSettings ekleme iþlemi //appsettings içersindeki verilerimi nesneye dönüþtürüyorum. Apsettings okuma iþlemi
@@ -55,6 +71,7 @@ namespace FreeCourse.Services.Catalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FreeCourse.Services.Catalog", Version = "v1" });
             });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,6 +84,9 @@ namespace FreeCourse.Services.Catalog
             }
 
             app.UseRouting();
+
+            // Koruma altýna alýndý
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
