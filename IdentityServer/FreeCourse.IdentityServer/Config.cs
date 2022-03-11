@@ -62,7 +62,7 @@ namespace FreeCourse.IdentityServer
                 ClientSecrets ={new Secret("secret".Sha256())}, // şifremiz olarak düşünebiliriz
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword, //İzin tipim
                 AllowedScopes = { IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.OpenId,IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.OfflineAccess,"roles"},// izin verilen scopelar
+                    IdentityServerConstants.StandardScopes.OfflineAccess,IdentityServerConstants.LocalApi.ScopeName,"roles"},// izin verilen scopelar
                 AccessTokenLifetime = 1*60*60,//AccesToken'nın ömrünü belirtiyorum. Saniye cinsinden 60*60 yparak 1 saat veriyorum
                 RefreshTokenExpiration = TokenExpiration.Absolute,//Kesin bir tarih veriyorum mesela 60 gün sonra alanamasın
                 AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
