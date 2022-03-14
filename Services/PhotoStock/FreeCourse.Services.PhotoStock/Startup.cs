@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace FreeCourse.Services.PhotoStock
 {
@@ -24,8 +26,20 @@ namespace FreeCourse.Services.PhotoStock
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //PhotoStockApi 'ý koruma altýna alýyorum
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                //bu microservice e tokenýn kimin daðýttýðýný haber vericem
+                options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
+                options.Audience = "resource_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
+                options.RequireHttpsMetadata = false;
+            });
+            // bütün Controllerlara koruma/izin þartý ver
+            services.AddControllers(opt =>
+            {
+                opt.Filters.Add(new AuthorizeFilter());//Artýk bütün Controllerlara izinlerý authorize larý verdim
+            });
 
-            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FreeCourse.Services.PhotoStock", Version = "v1" });
@@ -45,6 +59,10 @@ namespace FreeCourse.Services.PhotoStock
             app.UseStaticFiles();
 
             app.UseRouting();
+
+
+            // Koruma altýna alýndý
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
