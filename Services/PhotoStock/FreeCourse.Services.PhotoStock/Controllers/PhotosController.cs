@@ -47,7 +47,7 @@ namespace FreeCourse.Services.PhotoStock.Controllers
         }
 
 
-        [HttpDelete]
+       
         public IActionResult PhotoDelete(string photoUrl)
         {
             //sileceğimiz path'ı alalım
