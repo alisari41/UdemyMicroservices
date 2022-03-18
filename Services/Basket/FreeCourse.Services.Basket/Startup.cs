@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreeCourse.Services.Basket.Services;
 using FreeCourse.Services.Basket.Settings;
+using Microsoft.Extensions.Options;
 
 namespace FreeCourse.Services.Basket
 {
@@ -27,6 +29,19 @@ namespace FreeCourse.Services.Basket
         {
             //RedisSettings Host Port bilgilerine eriþmek için              appsettings.json içersindeki bilgileri alýcak
             services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
+
+            //Direk ayaða kalktýðýnda baðlantý kurulmasýný istiyorum.
+            services.AddSingleton<RedisService>(sp =>
+            {
+                // appsettings.json daki deðerleri okucam
+                var redisSettings = sp.GetRequiredService<IOptions<RedisSettings>>().Value;
+
+                var redis = new RedisService(redisSettings.Host, redisSettings.Port);
+
+                redis.Connect();
+
+                return redis;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
