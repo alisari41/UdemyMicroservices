@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FreeCourse.Services.Basket.Services;
 using FreeCourse.Services.Basket.Settings;
+using FreeCourse.Shared.Services;
 using Microsoft.Extensions.Options;
 
 namespace FreeCourse.Services.Basket
@@ -27,6 +28,11 @@ namespace FreeCourse.Services.Basket
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //SharedIdentityService için 
+            services.AddHttpContextAccessor();
+            // Bu interface ile karþýlaþtýðýn zaman git SharedIdentityService den bana nesne örneði al
+            services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+            
             //RedisSettings Host Port bilgilerine eriþmek için              appsettings.json içersindeki bilgileri alýcak
             services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
 
