@@ -32,7 +32,10 @@ namespace FreeCourse.Services.Basket
             services.AddHttpContextAccessor();
             // Bu interface ile karþýlaþtýðýn zaman git SharedIdentityService den bana nesne örneði al
             services.AddScoped<ISharedIdentityService, SharedIdentityService>();
-            
+            //Bu servisleri kullanmak için eklemek gerekir
+            services.AddScoped<IBasketService, BasketService>();
+
+
             //RedisSettings Host Port bilgilerine eriþmek için              appsettings.json içersindeki bilgileri alýcak
             services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
 
