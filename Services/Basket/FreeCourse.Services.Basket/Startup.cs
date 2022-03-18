@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using FreeCourse.Services.Basket.Services;
 using FreeCourse.Services.Basket.Settings;
 using FreeCourse.Shared.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
 namespace FreeCourse.Services.Basket
@@ -28,6 +31,17 @@ namespace FreeCourse.Services.Basket
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //lazým 
+            var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+            //BasketAPI 'ý koruma altýna alýyorum
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                //bu microservice e tokenýn kimin daðýttýðýný haber vericem
+                options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
+                options.Audience = "resource_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
+                options.RequireHttpsMetadata = false;
+            });
             //SharedIdentityService için 
             services.AddHttpContextAccessor();
             // Bu interface ile karþýlaþtýðýn zaman git SharedIdentityService den bana nesne örneði al
@@ -52,7 +66,11 @@ namespace FreeCourse.Services.Basket
                 return redis;
             });
 
-            services.AddControllers();
+            //bütün Controllerlara koruma/izin þartý ver
+            services.AddControllers(opt =>
+            {
+                opt.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FreeCourse.Services.Basket", Version = "v1" });
@@ -70,6 +88,9 @@ namespace FreeCourse.Services.Basket
 
             app.UseRouting();
 
+
+            //yetkiyi ekle
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
