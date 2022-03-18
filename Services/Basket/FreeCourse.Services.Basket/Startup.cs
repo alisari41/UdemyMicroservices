@@ -39,7 +39,7 @@ namespace FreeCourse.Services.Basket
             {
                 //bu microservice e tokenýn kimin daðýttýðýný haber vericem
                 options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
-                options.Audience = "resource_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
+                options.Audience = "resource_basket";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
                 options.RequireHttpsMetadata = false;
             });
             //SharedIdentityService için 

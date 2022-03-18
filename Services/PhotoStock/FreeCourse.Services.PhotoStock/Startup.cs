@@ -31,7 +31,7 @@ namespace FreeCourse.Services.PhotoStock
             {
                 //bu microservice e tokenýn kimin daðýttýðýný haber vericem
                 options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
-                options.Audience = "photo_stock_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
+                options.Audience = "resource_photo_stock";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
                 options.RequireHttpsMetadata = false;
             });
             // bütün Controllerlara koruma/izin þartý ver

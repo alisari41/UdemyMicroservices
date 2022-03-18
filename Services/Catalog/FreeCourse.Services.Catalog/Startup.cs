@@ -34,7 +34,7 @@ namespace FreeCourse.Services.Catalog
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 //bu microservice e tokenýn kimin daðýttýðýný haber vericem
-                options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz
+                options.Authority = Configuration["IdentityServerUrl"]; //Tokený alýyoruz appsettings.json
                 options.Audience = "resource_catalog";// Gelen tokenýn aud parametresi içersinde varmý diye bakýyorum istek yapabilmesi için izin 
                 options.RequireHttpsMetadata = false;
             });
