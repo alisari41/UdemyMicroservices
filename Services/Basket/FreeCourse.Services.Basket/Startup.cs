@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using FreeCourse.Services.Basket.Services;
@@ -33,6 +34,9 @@ namespace FreeCourse.Services.Basket
         {
             //lazým 
             var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
+            //Mapleme olayýný kaldýrmasýný haberdar edicem yani ben token cliam "sub" olarak beklerken kendi farklý isim veriyor
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
             //BasketAPI 'ý koruma altýna alýyorum
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
