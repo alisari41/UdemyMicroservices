@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreeCourse.Services.Basket.Settings;
 
 namespace FreeCourse.Services.Basket
 {
@@ -22,9 +23,10 @@ namespace FreeCourse.Services.Basket
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //RedisSettings Host Port bilgilerine eriþmek için              appsettings.json içersindeki bilgileri alýcak
+            services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -33,7 +35,6 @@ namespace FreeCourse.Services.Basket
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
